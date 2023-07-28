@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
+	"golang.org/x/exp/slices"
 	"io"
 	"log"
 	"os"
@@ -28,6 +29,7 @@ func main() {
 	var prefix string
 	var suffix string
 	var workdir string
+	var skipSender bool
 	flag.StringVar(&privateKey, "private-key", "", "Private key to use for signing")
 	flag.BoolVar(&ledger, "ledger", false, "Use ledger device for signing")
 	flag.StringVar(&mnemonic, "mnemonic", "", "Mnemonic to use for signing")
@@ -35,6 +37,7 @@ func main() {
 	flag.StringVar(&prefix, "prefix", "vvvvvvvv", "String that prefixes the data to be signed")
 	flag.StringVar(&suffix, "suffix", "^^^^^^^^", "String that suffixes the data to be signed")
 	flag.StringVar(&workdir, "workdir", ".", "Directory in which to run the subprocess")
+	flag.BoolVar(&skipSender, "skip-sender", false, "Skip adding the --sender flag to forge script commands")
 	flag.Parse()
 
 	options := 0
@@ -51,15 +54,24 @@ func main() {
 		log.Fatalf("One (and only one) of --private-key, --ledger, --mnemonic must be set")
 	}
 
+	s, err := createSigner(privateKey, mnemonic, hdPath)
+	if err != nil {
+		log.Fatalf("Error creating signer: %v", err)
+	}
+
 	var input []byte
-	var err error
 	if flag.NArg() == 0 {
 		input, err = io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatalf("Error reading from stdin: %v", err)
 		}
 	} else {
-		input, err = run(workdir, flag.Arg(0), flag.Args()[1:]...)
+		args := flag.Args()
+		if !skipSender && args[0] == "forge" && args[1] == "script" && !slices.Contains(args, "--sender") {
+			args = append(args, "--sender", s.address().String())
+		}
+		fmt.Printf("Running '%s\n", strings.Join(args, " "))
+		input, err = run(workdir, args[0], args[1:]...)
 		if err != nil {
 			log.Fatalf("Error running process: %v", err)
 		}
@@ -77,11 +89,6 @@ func main() {
 	hash := common.FromHex(strings.TrimSpace(string(input)))
 	if len(hash) != 66 {
 		log.Fatalf("Expected EIP-712 hex string with 66 bytes, got %d bytes, value: %s", len(input), string(input))
-	}
-
-	s, err := createSigner(privateKey, mnemonic, hdPath)
-	if err != nil {
-		log.Fatalf("Error creating signer: %v", err)
 	}
 
 	domainHash := hash[2:34]
