@@ -6,6 +6,7 @@ require (
 	github.com/decred/dcrd/hdkeychain/v3 v3.1.1
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/tyler-smith/go-bip39 v1.1.0
+	golang.org/x/exp v0.0.0-20230206171751-46f607a40771
 )
 
 require (
