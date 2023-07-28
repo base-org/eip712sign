@@ -100,6 +100,15 @@ func main() {
 		fmt.Printf("Data sent to ledger, awaiting signature...")
 	}
 	signature, err := s.sign(hash)
+	if err == accounts.ErrWalletClosed {
+		// ledger is flaky sometimes, recreate and retry
+		fmt.Printf("failed with %s, retrying...", err.Error())
+		s, err = createSigner(privateKey, mnemonic, hdPath)
+		if err != nil {
+			log.Fatalf("Error creating signer: %v", err)
+		}
+		signature, err = s.sign(hash)
+	}
 	if ledger {
 		fmt.Println("done")
 	}
