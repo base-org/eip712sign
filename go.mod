@@ -6,7 +6,6 @@ require (
 	github.com/decred/dcrd/hdkeychain/v3 v3.1.1
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/tyler-smith/go-bip39 v1.1.0
-	golang.org/x/exp v0.0.0-20230206171751-46f607a40771
 )
 
 require (
@@ -17,6 +16,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/holiman/uint256 v1.2.2-0.20230321075855-87b91420868c // indirect
 	github.com/karalabe/usb v0.0.3-0.20230711191512-61db3e06439c // indirect
 	golang.org/x/crypto v0.1.0 // indirect
