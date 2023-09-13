@@ -6,12 +6,13 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	"golang.org/x/exp/slices"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"github.com/decred/dcrd/hdkeychain/v3"
 	"github.com/ethereum/go-ethereum/accounts"
@@ -54,12 +55,15 @@ func main() {
 		log.Fatalf("One (and only one) of --private-key, --ledger, --mnemonic must be set")
 	}
 
-	s, err := createSigner(privateKey, mnemonic, hdPath)
-	if err != nil {
-		log.Fatalf("Error creating signer: %v", err)
+	// signer creation error is handled later, allowing the command that generates the signable
+	// data to run without a key / ledger, which is useful for simulation purposes
+	s, signerErr := createSigner(privateKey, mnemonic, hdPath)
+	if signerErr != nil {
+		log.Printf("Warning: signer creation failed: %v", signerErr)
 	}
 
 	var input []byte
+	var err error
 	if flag.NArg() == 0 {
 		input, err = io.ReadAll(os.Stdin)
 		if err != nil {
@@ -67,7 +71,7 @@ func main() {
 		}
 	} else {
 		args := flag.Args()
-		if !skipSender && args[0] == "forge" && args[1] == "script" && !slices.Contains(args, "--sender") {
+		if !skipSender && args[0] == "forge" && args[1] == "script" && !slices.Contains(args, "--sender") && s != nil {
 			args = append(args, "--sender", s.address().String())
 		}
 		fmt.Printf("Running '%s\n", strings.Join(args, " "))
@@ -95,6 +99,10 @@ func main() {
 	messageHash := hash[34:66]
 	fmt.Printf("Domain hash: 0x%s\n", hex.EncodeToString(domainHash))
 	fmt.Printf("Message hash: 0x%s\n", hex.EncodeToString(messageHash))
+
+	if signerErr != nil {
+		log.Fatalf("Error creating signer: %v", signerErr)
+	}
 
 	if ledger {
 		fmt.Printf("Data sent to ledger, awaiting signature...")
