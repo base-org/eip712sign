@@ -1,9 +1,31 @@
 # eip712sign
 
 Small golang utility used to sign EIP-712 hashes. Supports:
- - ledgers
- - mnemonics
- - raw private keys
+
+- ledgers
+- mnemonics
+- raw private keys
+
+<!-- Badge row 1 - status -->
+
+[![GitHub contributors](https://img.shields.io/github/contributors/base-org/eip712sign)](https://github.com/base-org/eip712sign/graphs/contributors)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/base-org/eip712sign)](https://github.com/base-org/eip712sign/graphs/contributors)
+[![GitHub Stars](https://img.shields.io/github/stars/base-org/eip712sign.svg)](https://github.com/base-org/eip712sign/stargazers)
+![GitHub repo size](https://img.shields.io/github/repo-size/base-org/eip712sign)
+[![GitHub](https://img.shields.io/github/license/base-org/eip712sign?color=blue)](https://github.com/base-org/eip712sign/blob/main/LICENSE)
+
+<!-- Badge row 2 - links and profiles -->
+
+[![Website base.org](https://img.shields.io/website-up-down-green-red/https/base.org.svg)](https://base.org)
+[![Blog](https://img.shields.io/badge/blog-up-green)](https://base.mirror.xyz/)
+[![Docs](https://img.shields.io/badge/docs-up-green)](https://docs.base.org/)
+[![Discord](https://img.shields.io/discord/1067165013397213286?label=discord)](https://base.org/discord)
+[![Twitter BuildOnBase](https://img.shields.io/twitter/follow/BuildOnBase?style=social)](https://twitter.com/BuildOnBase)
+
+<!-- Badge row 3 - detailed status -->
+
+[![GitHub pull requests by-label](https://img.shields.io/github/issues-pr-raw/base-org/eip712sign)](https://github.com/base-org/eip712sign/pulls)
+[![GitHub Issues](https://img.shields.io/github/issues-raw/base-org/eip712sign.svg)](https://github.com/base-org/eip712sign/issues)
 
 ### Installation
 
@@ -39,7 +61,9 @@ The former is recommended as it will only attempt to sign if the subprocess exit
 ```shell
 eip712sign --ledger -- <COMMAND>
 ```
+
 or
+
 ```shell
 <COMMAND> | eip712sign --ledger
 ```
@@ -61,9 +85,11 @@ function printDataToSign(bytes memory data) internal pure {
     console.log("^^^^^^^^");
 }
 ```
+
 ...where `data` is 66 bytes in length.
 
 Example output:
+
 ```shell
 Compiling 5 files with 0.8.15
 Solc 0.8.15 finished in 7.01s
@@ -82,5 +108,5 @@ Message hash: 0xd5c5183a56f8aa2520c9522029fc20aba61ce6c6aa32aec3b00519c95eb819e8
 
 Data: 0x19011b6ca1022dcb8ee88e2ab8dd1adf6f6bfa6af586f8b074e99c952e6e3c6befadd5c5183a56f8aa2520c9522029fc20aba61ce6c6aa32aec3b00519c95eb819e8
 Signer: 0x4A02DE0C8a1C74AB99D1eCeb56d1d5f54B8293b0
-Signature: 36b6a15e3e86b1ae44bdfc9183c4d86b0eaead44c838530ecb2e43dd0618559579195d42fe63868a44ee0279feef0181b1a9ed3b0faa89bf1ebd48b0f48f54bc1c```
+Signature: 36b6a15e3e86b1ae44bdfc9183c4d86b0eaead44c838530ecb2e43dd0618559579195d42fe63868a44ee0279feef0181b1a9ed3b0faa89bf1ebd48b0f48f54bc1c
 ```
