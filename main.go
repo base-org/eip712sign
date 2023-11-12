@@ -27,6 +27,7 @@ func main() {
 	var ledger bool
 	var mnemonic string
 	var hdPath string
+	var data string
 	var prefix string
 	var suffix string
 	var workdir string
@@ -35,6 +36,7 @@ func main() {
 	flag.BoolVar(&ledger, "ledger", false, "Use ledger device for signing")
 	flag.StringVar(&mnemonic, "mnemonic", "", "Mnemonic to use for signing")
 	flag.StringVar(&hdPath, "hd-paths", "m/44'/60'/0'/0/0", "Hierarchical deterministic derivation path for mnemonic or ledger")
+	flag.StringVar(&data, "data", "", "Data to be signed")
 	flag.StringVar(&prefix, "prefix", "vvvvvvvv", "String that prefixes the data to be signed")
 	flag.StringVar(&suffix, "suffix", "^^^^^^^^", "String that suffixes the data to be signed")
 	flag.StringVar(&workdir, "workdir", ".", "Directory in which to run the subprocess")
@@ -64,7 +66,9 @@ func main() {
 
 	var input []byte
 	var err error
-	if flag.NArg() == 0 {
+	if data != "" {
+		input = []byte(data)
+	} else if flag.NArg() == 0 {
 		input, err = io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatalf("Error reading from stdin: %v", err)
