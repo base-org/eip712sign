@@ -25,6 +25,7 @@ import (
 func main() {
 	var privateKey string
 	var ledger bool
+	var address bool
 	var mnemonic string
 	var hdPath string
 	var data string
@@ -34,6 +35,7 @@ func main() {
 	var skipSender bool
 	flag.StringVar(&privateKey, "private-key", "", "Private key to use for signing")
 	flag.BoolVar(&ledger, "ledger", false, "Use ledger device for signing")
+	flag.BoolVar(&address, "address", false, "Print address of signer and exit")
 	flag.StringVar(&mnemonic, "mnemonic", "", "Mnemonic to use for signing")
 	flag.StringVar(&hdPath, "hd-paths", "m/44'/60'/0'/0/0", "Hierarchical deterministic derivation path for mnemonic or ledger")
 	flag.StringVar(&data, "data", "", "Data to be signed")
@@ -62,6 +64,12 @@ func main() {
 	s, signerErr := createSigner(privateKey, mnemonic, hdPath)
 	if signerErr != nil {
 		log.Printf("Warning: signer creation failed: %v", signerErr)
+		os.Exit(1)
+	}
+
+	if address {
+		fmt.Printf("Signer: %s\n", s.address().String())
+		os.Exit(0)
 	}
 
 	var input []byte
@@ -98,6 +106,8 @@ func main() {
 	if len(hash) != 66 {
 		log.Fatalf("Expected EIP-712 hex string with 66 bytes, got %d bytes, value: %s", len(input), string(input))
 	}
+
+	fmt.Printf("Signing as: %s\n\n", s.address().String())
 
 	domainHash := hash[2:34]
 	messageHash := hash[34:66]
@@ -175,8 +185,6 @@ func createSigner(privateKey, mnemonic, hdPath string) (signer, error) {
 	wallets := ledgerHub.Wallets()
 	if len(wallets) == 0 {
 		return nil, fmt.Errorf("no ledgers found, please connect your ledger")
-	} else if len(wallets) > 1 {
-		return nil, fmt.Errorf("multiple ledgers found, please use one ledger at a time")
 	}
 	wallet := wallets[0]
 	if err := wallet.Open(""); err != nil {
