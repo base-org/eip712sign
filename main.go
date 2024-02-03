@@ -25,6 +25,7 @@ import (
 func main() {
 	var privateKey string
 	var ledger bool
+	var index int
 	var address bool
 	var mnemonic string
 	var hdPath string
@@ -35,6 +36,7 @@ func main() {
 	var skipSender bool
 	flag.StringVar(&privateKey, "private-key", "", "Private key to use for signing")
 	flag.BoolVar(&ledger, "ledger", false, "Use ledger device for signing")
+	flag.IntVar(&index, "index", 0, "Index of the ledger to use")
 	flag.BoolVar(&address, "address", false, "Print address of signer and exit")
 	flag.StringVar(&mnemonic, "mnemonic", "", "Mnemonic to use for signing")
 	flag.StringVar(&hdPath, "hd-paths", "m/44'/60'/0'/0/0", "Hierarchical deterministic derivation path for mnemonic or ledger")
@@ -61,14 +63,15 @@ func main() {
 
 	// signer creation error is handled later, allowing the command that generates the signable
 	// data to run without a key / ledger, which is useful for simulation purposes
-	s, signerErr := createSigner(privateKey, mnemonic, hdPath)
+	s, signerErr := createSigner(privateKey, mnemonic, hdPath, index)
 	if signerErr != nil {
 		log.Printf("Warning: signer creation failed: %v", signerErr)
-		os.Exit(1)
 	}
 
 	if address {
-		fmt.Printf("Signer: %s\n", s.address().String())
+		if s == nil {
+			fmt.Printf("Signer: %s\n", s.address().String())
+		}
 		os.Exit(0)
 	}
 
@@ -125,7 +128,7 @@ func main() {
 	if err == accounts.ErrWalletClosed {
 		// ledger is flaky sometimes, recreate and retry
 		fmt.Printf("failed with %s, retrying...", err.Error())
-		s, err = createSigner(privateKey, mnemonic, hdPath)
+		s, err = createSigner(privateKey, mnemonic, hdPath, index)
 		if err != nil {
 			log.Fatalf("Error creating signer: %v", err)
 		}
@@ -155,7 +158,7 @@ func run(workdir, name string, args ...string) ([]byte, error) {
 	return buffer.Bytes(), err
 }
 
-func createSigner(privateKey, mnemonic, hdPath string) (signer, error) {
+func createSigner(privateKey, mnemonic, hdPath string, index int) (signer, error) {
 	path, err := accounts.ParseDerivationPath(hdPath)
 	if err != nil {
 		return nil, err
@@ -185,8 +188,13 @@ func createSigner(privateKey, mnemonic, hdPath string) (signer, error) {
 	wallets := ledgerHub.Wallets()
 	if len(wallets) == 0 {
 		return nil, fmt.Errorf("no ledgers found, please connect your ledger")
+	} else if len(wallets) > 1 {
+		fmt.Printf("Found %d ledgers, using index %d\n", len(wallets), index)
 	}
-	wallet := wallets[0]
+	if index < 0 || index >= len(wallets) {
+		return nil, fmt.Errorf("ledger index out of range")
+	}
+	wallet := wallets[index]
 	if err := wallet.Open(""); err != nil {
 		return nil, fmt.Errorf("error opening ledger: %w", err)
 	}
