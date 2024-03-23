@@ -69,7 +69,7 @@ func main() {
 	}
 
 	if address {
-		if s == nil {
+		if s != nil {
 			fmt.Printf("Signer: %s\n", s.address().String())
 		}
 		os.Exit(0)
