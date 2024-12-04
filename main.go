@@ -110,8 +110,6 @@ func main() {
 		log.Fatalf("Expected EIP-712 hex string with 66 bytes, got %d bytes, value: %s", len(input), string(input))
 	}
 
-	fmt.Printf("Signing as: %s\n\n", s.address().String())
-
 	domainHash := hash[2:34]
 	messageHash := hash[34:66]
 	fmt.Printf("Domain hash: 0x%s\n", hex.EncodeToString(domainHash))
@@ -120,6 +118,8 @@ func main() {
 	if signerErr != nil {
 		log.Fatalf("Error creating signer: %v", signerErr)
 	}
+
+	fmt.Printf("Signing as: %s\n\n", s.address().String())
 
 	if ledger {
 		fmt.Printf("Data sent to ledger, awaiting signature...")
