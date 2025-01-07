@@ -64,13 +64,14 @@ func main() {
 	// data to run without a key / ledger, which is useful for simulation purposes
 	s, signerErr := createSigner(privateKey, mnemonic, hdPath, index)
 	if signerErr != nil {
+		if address {
+			log.Fatalf("Error creating signer: %v", signerErr)
+		}
 		log.Printf("Warning: signer creation failed: %v", signerErr)
 	}
 
 	if address {
-		if s != nil {
-			fmt.Printf("Signer: %s\n", s.address().String())
-		}
+		fmt.Printf("Signer: %s\n", s.address().String())
 		os.Exit(0)
 	}
 
@@ -199,7 +200,7 @@ func createSigner(privateKey, mnemonic, hdPath string, index int) (signer, error
 	}
 	account, err := wallet.Derive(path, true)
 	if err != nil {
-		return nil, fmt.Errorf("error deriving ledger account (have you unlocked?): %w", err)
+		return nil, fmt.Errorf("error deriving ledger account (please unlock and open the Ethereum app): %w", err)
 	}
 	return &walletSigner{
 		wallet:  wallet,
