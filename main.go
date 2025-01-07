@@ -12,14 +12,13 @@ import (
 	"os/exec"
 	"strings"
 
-	"golang.org/x/exp/slices"
-
+	"github.com/base-org/eip712sign/usbwallet"
 	"github.com/decred/dcrd/hdkeychain/v3"
 	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/usbwallet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/tyler-smith/go-bip39"
+	"golang.org/x/exp/slices"
 )
 
 func main() {
