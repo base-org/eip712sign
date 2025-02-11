@@ -8,11 +8,11 @@ Small golang utility used to sign EIP-712 hashes. Supports:
 
 <!-- Badge row 1 - status -->
 
-[![GitHub contributors](https://img.shields.io/github/contributors/base-org/eip712sign)](https://github.com/base-org/eip712sign/graphs/contributors)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/base-org/eip712sign)](https://github.com/base-org/eip712sign/graphs/contributors)
-[![GitHub Stars](https://img.shields.io/github/stars/base-org/eip712sign.svg)](https://github.com/base-org/eip712sign/stargazers)
-![GitHub repo size](https://img.shields.io/github/repo-size/base-org/eip712sign)
-[![GitHub](https://img.shields.io/github/license/base-org/eip712sign?color=blue)](https://github.com/base-org/eip712sign/blob/main/LICENSE)
+[![GitHub contributors](https://img.shields.io/github/contributors/base/eip712sign)](https://github.com/base/eip712sign/graphs/contributors)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/base/eip712sign)](https://github.com/base/eip712sign/graphs/contributors)
+[![GitHub Stars](https://img.shields.io/github/stars/base/eip712sign.svg)](https://github.com/base/eip712sign/stargazers)
+![GitHub repo size](https://img.shields.io/github/repo-size/base/eip712sign)
+[![GitHub](https://img.shields.io/github/license/base/eip712sign?color=blue)](https://github.com/base/eip712sign/blob/main/LICENSE)
 
 <!-- Badge row 2 - links and profiles -->
 
@@ -24,13 +24,13 @@ Small golang utility used to sign EIP-712 hashes. Supports:
 
 <!-- Badge row 3 - detailed status -->
 
-[![GitHub pull requests by-label](https://img.shields.io/github/issues-pr-raw/base-org/eip712sign)](https://github.com/base-org/eip712sign/pulls)
-[![GitHub Issues](https://img.shields.io/github/issues-raw/base-org/eip712sign.svg)](https://github.com/base-org/eip712sign/issues)
+[![GitHub pull requests by-label](https://img.shields.io/github/issues-pr-raw/base/eip712sign)](https://github.com/base/eip712sign/pulls)
+[![GitHub Issues](https://img.shields.io/github/issues-raw/base/eip712sign.svg)](https://github.com/base/eip712sign/issues)
 
 ### Installation
 
 ```shell
-go install github.com/base-org/eip712sign
+go install github.com/base/eip712sign
 ```
 
 ### Flags
